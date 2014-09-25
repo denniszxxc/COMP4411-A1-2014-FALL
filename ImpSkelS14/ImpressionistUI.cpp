@@ -269,6 +269,17 @@ void ImpressionistUI::cb_clear_canvas_button(Fl_Widget* o, void* v)
 	pDoc->clearCanvas();
 }
 
+//------------------------------------------------------------
+// Paint whole image
+// Called by the UI when the clear canvas button is pushed
+//------------------------------------------------------------
+void ImpressionistUI::cb_paint_all_button(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_paintView->paintAll(((ImpressionistUI*)(o->user_data()))->m_nSpace);
+
+}
+
+
 
 //-----------------------------------------------------------
 // Updates the brush size to use from the value of the size
@@ -279,6 +290,18 @@ void ImpressionistUI::cb_sizeSlides(Fl_Widget* o, void* v)
 {
 	((ImpressionistUI*)(o->user_data()))->m_nSize=int( ((Fl_Slider *)o)->value() ) ;
 }
+
+//-----------------------------------------------------------
+// Updates the brush size to use from the value of the size
+// slider
+// Called by the UI when the size slider is moved
+//-----------------------------------------------------------
+void ImpressionistUI::cb_SpaceSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nSpace = int(((Fl_Slider *)o)->value());
+}
+
+
 
 //---------------------------------- per instance functions --------------------------------------
 
@@ -417,6 +440,7 @@ ImpressionistUI::ImpressionistUI() {
 	// init values
 
 	m_nSize = 10;
+	m_nSpace = 1;
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
@@ -443,6 +467,23 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushSizeSlider->value(m_nSize);
 		m_BrushSizeSlider->align(FL_ALIGN_RIGHT);
 		m_BrushSizeSlider->callback(cb_sizeSlides);
+
+		// Add paint all space slider to the dialog 
+		m_PaintAllSpaceSlider = new Fl_Value_Slider(10, 110, 150, 20, "Space");
+		m_PaintAllSpaceSlider->user_data((void*)(this));	// record self to be used by static callback functions
+		m_PaintAllSpaceSlider->type(FL_HOR_NICE_SLIDER);
+		m_PaintAllSpaceSlider->labelfont(FL_COURIER);
+		m_PaintAllSpaceSlider->labelsize(12);
+		m_PaintAllSpaceSlider->minimum(1);
+		m_PaintAllSpaceSlider->maximum(16);
+		m_PaintAllSpaceSlider->step(1);
+		m_PaintAllSpaceSlider->value(m_nSpace);
+		m_PaintAllSpaceSlider->align(FL_ALIGN_RIGHT);
+		m_PaintAllSpaceSlider->callback(cb_SpaceSlides);
+
+		m_PaintAll = new Fl_Button(250, 110, 100, 25, "&Paint All");
+		m_PaintAll->user_data((void*)(this));
+		m_PaintAll->callback(cb_paint_all_button);
 
     m_brushDialog->end();	
 

@@ -40,6 +40,9 @@ public:
 	Fl_Slider*			m_BrushSizeSlider;
 	Fl_Button*          m_ClearCanvasButton;
 
+	Fl_Slider*			m_PaintAllSpaceSlider;
+	Fl_Button*			m_PaintAll;
+
 	// Member functions
 	void				setDocument(ImpressionistDoc* doc);
 	ImpressionistDoc*	getDocument();
@@ -57,6 +60,7 @@ private:
 
 	// All attributes here
 	int		m_nSize;
+	int		m_nSpace;
 
 	// Static class members
 	static Fl_Menu_Item		menuitems[];
@@ -75,7 +79,9 @@ private:
 	static void	cb_brushChoice(Fl_Widget* o, void* v);
 	static void	cb_clear_canvas_button(Fl_Widget* o, void* v);
 	static void	cb_sizeSlides(Fl_Widget* o, void* v);
+	static void cb_SpaceSlides(Fl_Widget* o, void* v);
 	static void	swap_windows(Fl_Menu_* o, void* v);
+	static void cb_paint_all_button(Fl_Widget* o, void* v);
 
 };
 

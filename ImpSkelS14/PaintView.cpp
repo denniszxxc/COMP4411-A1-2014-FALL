@@ -249,3 +249,16 @@ void PaintView::RestoreContent()
 
 //	glDrawBuffer(GL_FRONT);
 }
+
+void PaintView::paintAll(int space) {
+	isAnEvent = true;
+	for (int i = 0; i < m_nDrawWidth; i += space){
+		for (int j = 0; j < m_nDrawHeight; j += space){
+			Point source(i + m_nStartCol, m_nEndRow - j);
+			Point target(i, m_nWindowHeight - j);
+			m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+		}
+	}
+	refresh();
+	isAnEvent = true;
+}
