@@ -213,3 +213,8 @@ GLubyte* ImpressionistDoc::GetOriginalPixel( const Point p )
 	return GetOriginalPixel( p.x, p.y );
 }
 
+void ImpressionistDoc::red_dot(int x, int y){
+	if (x > 0) {
+		m_pUI->m_origView->refresh(x,y);
+	}
+}

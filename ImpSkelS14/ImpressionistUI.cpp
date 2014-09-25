@@ -319,6 +319,17 @@ void ImpressionistUI::cb_clear_canvas_button(Fl_Widget* o, void* v)
 	pDoc->clearCanvas();
 }
 
+//------------------------------------------------------------
+// Paint whole image
+// Called by the UI when the clear canvas button is pushed
+//------------------------------------------------------------
+void ImpressionistUI::cb_paint_all_button(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_paintView->paintAll(((ImpressionistUI*)(o->user_data()))->m_nSpace);
+
+}
+
+
 
 //-----------------------------------------------------------
 // Updates the brush size to use from the value of the size
@@ -329,6 +340,18 @@ void ImpressionistUI::cb_sizeSlides(Fl_Widget* o, void* v)
 {
 	((ImpressionistUI*)(o->user_data()))->m_nSize=int( ((Fl_Slider *)o)->value() ) ;
 }
+
+//-----------------------------------------------------------
+// Updates the brush size to use from the value of the size
+// slider
+// Called by the UI when the size slider is moved
+//-----------------------------------------------------------
+void ImpressionistUI::cb_SpaceSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nSpace = int(((Fl_Slider *)o)->value());
+}
+
+
 
 //---------------------------------- per instance functions --------------------------------------
 
@@ -367,6 +390,17 @@ void ImpressionistUI::resize_windows(int w, int h) {
 	m_origView->size(w,h);
 }
 
+//------------------------------------------------
+// Swap the paint and original window 
+//------------------------------------------------
+void ImpressionistUI::swap_windows(Fl_Menu_* o, void* v) {
+	int tempX = whoami(o)->m_paintView->x();
+	int tempY = whoami(o)->m_paintView->y();
+
+	whoami(o)->m_paintView->position(whoami(o)->m_origView->x(), whoami(o)->m_origView->y());
+	whoami(o)->m_origView->position(tempX, tempY);
+
+}
 //------------------------------------------------ 
 // Set the ImpressionistDoc used by the UI to 
 // communicate with the brushes 
@@ -427,6 +461,10 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 		{ "&Quit",			FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit },
 		{ 0 },
 
+	{ "&Display",	0, 0, 0, FL_SUBMENU },
+		{ "&Swap original image and paint image", FL_ALT + 'd', (Fl_Callback *)ImpressionistUI::swap_windows },
+		{ 0 },
+	
 	{ "&Help",		0, 0, 0, FL_SUBMENU },
 		{ "&About",	FL_ALT + 'a', (Fl_Callback *)ImpressionistUI::cb_about },
 		{ 0 },
@@ -487,6 +525,7 @@ ImpressionistUI::ImpressionistUI() {
 	// init values
 
 	m_nSize = 10;
+	m_nSpace = 1;
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
@@ -547,6 +586,23 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushAngleSlider->align(FL_ALIGN_RIGHT);
 		m_BrushAngleSlider->callback(cb_angleSlides);
 		m_BrushAngleSlider->deactivate();
+
+		// Add paint all space slider to the dialog 
+		m_PaintAllSpaceSlider = new Fl_Value_Slider(10, 150, 150, 20, "Space");
+		m_PaintAllSpaceSlider->user_data((void*)(this));	// record self to be used by static callback functions
+		m_PaintAllSpaceSlider->type(FL_HOR_NICE_SLIDER);
+		m_PaintAllSpaceSlider->labelfont(FL_COURIER);
+		m_PaintAllSpaceSlider->labelsize(12);
+		m_PaintAllSpaceSlider->minimum(1);
+		m_PaintAllSpaceSlider->maximum(16);
+		m_PaintAllSpaceSlider->step(1);
+		m_PaintAllSpaceSlider->value(m_nSpace);
+		m_PaintAllSpaceSlider->align(FL_ALIGN_RIGHT);
+		m_PaintAllSpaceSlider->callback(cb_SpaceSlides);
+
+		m_PaintAll = new Fl_Button(250, 150, 100, 25, "&Paint All");
+		m_PaintAll->user_data((void*)(this));
+		m_PaintAll->callback(cb_paint_all_button);
 
     m_brushDialog->end();	
 

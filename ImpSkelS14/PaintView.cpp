@@ -105,10 +105,16 @@ void PaintView::draw()
 		switch (eventToDo) 
 		{
 		case LEFT_MOUSE_DOWN:
-			m_pDoc->m_pCurrentBrush->BrushBegin( source, target );
+			if (coord.x > m_nStartCol && coord.x < m_nEndCol
+				&& coord.y>m_nStartRow && coord.y < m_nEndRow){
+				m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+			}
 			break;
 		case LEFT_MOUSE_DRAG:
-			m_pDoc->m_pCurrentBrush->BrushMove( source, target );
+			if (coord.x > m_nStartCol && coord.x < m_nEndCol
+				&& coord.y>m_nStartRow && coord.y < m_nEndRow){
+				m_pDoc->m_pCurrentBrush->BrushMove(source, target);
+			}
 			break;
 		case LEFT_MOUSE_UP:
 			m_pDoc->m_pCurrentBrush->BrushEnd( source, target );
@@ -144,29 +150,31 @@ void PaintView::draw()
 
 int PaintView::handle(int event)
 {
-	switch(event)
+	switch (event)
 	{
 	case FL_ENTER:
-	    redraw();
+		redraw();
 		break;
 	case FL_PUSH:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
-		if (Fl::event_button()>1)
-			eventToDo=RIGHT_MOUSE_DOWN;
+		if (Fl::event_button() > 1)
+			eventToDo = RIGHT_MOUSE_DOWN;
 		else
-			eventToDo=LEFT_MOUSE_DOWN;
-		isAnEvent=1;
+			eventToDo = LEFT_MOUSE_DOWN;
+		isAnEvent = 1;
 		redraw();
 		break;
 	case FL_DRAG:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
-		if (Fl::event_button()>1)
-			eventToDo=RIGHT_MOUSE_DRAG;
+		if (Fl::event_button() > 1)
+			eventToDo = RIGHT_MOUSE_DRAG;
 		else
-			eventToDo=LEFT_MOUSE_DRAG;
-		isAnEvent=1;
+			eventToDo = LEFT_MOUSE_DRAG;
+		isAnEvent = 1;
+	
+		m_pDoc->red_dot(coord.x, coord.y);
 		redraw();
 		break;
 	case FL_RELEASE:
@@ -182,6 +190,7 @@ int PaintView::handle(int event)
 	case FL_MOVE:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
+		m_pDoc->red_dot(coord.x , coord.y);
 		break;
 	default:
 		return 0;
@@ -239,4 +248,17 @@ void PaintView::RestoreContent()
 				  m_pPaintBitstart);
 
 //	glDrawBuffer(GL_FRONT);
+}
+
+void PaintView::paintAll(int space) {
+	isAnEvent = true;
+	for (int i = 0; i < m_nDrawWidth; i += space){
+		for (int j = 0; j < m_nDrawHeight; j += space){
+			Point source(i + m_nStartCol, m_nEndRow - j);
+			Point target(i, m_nWindowHeight - j);
+			m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+		}
+	}
+	refresh();
+	isAnEvent = true;
 }
