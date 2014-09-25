@@ -105,7 +105,10 @@ void PaintView::draw()
 		switch (eventToDo) 
 		{
 		case LEFT_MOUSE_DOWN:
-			m_pDoc->m_pCurrentBrush->BrushBegin( source, target );
+			if (coord.x > m_nStartCol && coord.x < m_nEndCol
+				&& coord.y>m_nStartRow && coord.y < m_nEndRow){
+				m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+			}
 			break;
 		case LEFT_MOUSE_DRAG:
 			if (coord.x > m_nStartCol && coord.x < m_nEndCol
