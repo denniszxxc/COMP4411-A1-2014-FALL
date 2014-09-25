@@ -308,6 +308,17 @@ void ImpressionistUI::resize_windows(int w, int h) {
 	m_origView->size(w,h);
 }
 
+//------------------------------------------------
+// Swap the paint and original window 
+//------------------------------------------------
+void ImpressionistUI::swap_windows(Fl_Menu_* o, void* v) {
+	int tempX = whoami(o)->m_paintView->x();
+	int tempY = whoami(o)->m_paintView->y();
+
+	whoami(o)->m_paintView->position(whoami(o)->m_origView->x(), whoami(o)->m_origView->y());
+	whoami(o)->m_origView->position(tempX, tempY);
+
+}
 //------------------------------------------------ 
 // Set the ImpressionistDoc used by the UI to 
 // communicate with the brushes 
@@ -350,6 +361,10 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 		{ "&Quit",			FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit },
 		{ 0 },
 
+	{ "&Display",	0, 0, 0, FL_SUBMENU },
+		{ "&Swap original image and paint image", FL_ALT + 'd', (Fl_Callback *)ImpressionistUI::swap_windows },
+		{ 0 },
+	
 	{ "&Help",		0, 0, 0, FL_SUBMENU },
 		{ "&About",	FL_ALT + 'a', (Fl_Callback *)ImpressionistUI::cb_about },
 		{ 0 },
