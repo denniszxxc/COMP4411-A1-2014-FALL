@@ -525,7 +525,7 @@ ImpressionistUI::ImpressionistUI() {
 	// init values
 
 	m_nSize = 10;
-	m_nSpace = 1;
+	m_nSpace = 10;
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
@@ -588,7 +588,7 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushAngleSlider->deactivate();
 
 		// Add paint all space slider to the dialog 
-		m_PaintAllSpaceSlider = new Fl_Value_Slider(10, 150, 150, 20, "Space");
+		m_PaintAllSpaceSlider = new Fl_Value_Slider(10, 180, 150, 20, "Space");
 		m_PaintAllSpaceSlider->user_data((void*)(this));	// record self to be used by static callback functions
 		m_PaintAllSpaceSlider->type(FL_HOR_NICE_SLIDER);
 		m_PaintAllSpaceSlider->labelfont(FL_COURIER);
@@ -600,7 +600,7 @@ ImpressionistUI::ImpressionistUI() {
 		m_PaintAllSpaceSlider->align(FL_ALIGN_RIGHT);
 		m_PaintAllSpaceSlider->callback(cb_SpaceSlides);
 
-		m_PaintAll = new Fl_Button(250, 150, 100, 25, "&Paint All");
+		m_PaintAll = new Fl_Button(250, 180, 100, 25, "&Paint All");
 		m_PaintAll->user_data((void*)(this));
 		m_PaintAll->callback(cb_paint_all_button);
 
