@@ -28,7 +28,7 @@ public:
 	int		getSize();						// get the UI size
 	void	setSize(int size);				// set the UI size
 	char*	getImageName();					// get the current image name
-	
+	void	red_dot(int x, int y);			// call by paintView to create red dot on OriginalView
 
 // Attributes
 public:

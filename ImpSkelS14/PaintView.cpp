@@ -171,6 +171,7 @@ int PaintView::handle(int event)
 			eventToDo = LEFT_MOUSE_DRAG;
 		isAnEvent = 1;
 	
+		m_pDoc->red_dot(coord.x, coord.y);
 		redraw();
 		break;
 	case FL_RELEASE:
@@ -186,8 +187,7 @@ int PaintView::handle(int event)
 	case FL_MOVE:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
-
-		
+		m_pDoc->red_dot(coord.x , coord.y);
 		break;
 	default:
 		return 0;
@@ -202,7 +202,6 @@ int PaintView::handle(int event)
 
 void PaintView::refresh()
 {
-	
 	redraw();
 }
 
