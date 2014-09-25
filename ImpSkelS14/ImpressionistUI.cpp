@@ -252,10 +252,60 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget* o, void* v)
 	ImpressionistUI* pUI=((ImpressionistUI *)(o->user_data()));
 	ImpressionistDoc* pDoc=pUI->getDocument();
 
+	switch ((int)v){
+	case BRUSH_POINTS:{
+		pUI->m_BrushWidthSlider->deactivate();
+		pUI->m_BrushAngleSlider->deactivate();
+		pUI->m_DirectionControlTypeChoice->deactivate();
+		break;
+	}
+	case BRUSH_LINES: {
+		pUI->m_BrushWidthSlider->activate();
+		pUI->m_BrushAngleSlider->activate();
+		pUI->m_DirectionControlTypeChoice->activate();
+		break;
+	}
+	case BRUSH_CIRCLES: {
+		pUI->m_BrushWidthSlider->deactivate();
+		pUI->m_BrushAngleSlider->deactivate();
+		pUI->m_DirectionControlTypeChoice->deactivate();
+		break;
+	}
+	case BRUSH_SCATTERED_POINTS:{
+		pUI->m_BrushWidthSlider->deactivate();
+		pUI->m_BrushAngleSlider->deactivate();
+		pUI->m_DirectionControlTypeChoice->deactivate();
+		break;
+	}
+	case BRUSH_SCATTERED_CIRCLES: {
+		pUI->m_BrushWidthSlider->deactivate();
+		pUI->m_BrushAngleSlider->deactivate();
+		pUI->m_DirectionControlTypeChoice->deactivate();
+		break;
+	}
+	case BRUSH_SCATTERED_LINES: {
+		pUI->m_BrushWidthSlider->activate();
+		pUI->m_BrushAngleSlider->activate();
+		pUI->m_DirectionControlTypeChoice->activate();
+		break;
+	}
+	}
+
 	int type=(int)v;
 
 
 	pDoc->setBrushType(type);
+}
+void ImpressionistUI::cb_directionControlTypeChoice(Fl_Widget* o, void* v)
+{
+	ImpressionistUI* pUI = ((ImpressionistUI *)(o->user_data()));
+	ImpressionistDoc* pDoc = pUI->getDocument();
+
+	
+	int type = (int)v;
+
+
+	pDoc->setDirectionControlType(type);
 }
 
 //------------------------------------------------------------
@@ -282,6 +332,15 @@ void ImpressionistUI::cb_sizeSlides(Fl_Widget* o, void* v)
 
 //---------------------------------- per instance functions --------------------------------------
 
+//----The slider callback--------------------------
+void ImpressionistUI::cb_widthSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nWidth = int(((Fl_Slider *)o)->value());
+}
+void ImpressionistUI::cb_angleSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nAngle = int(((Fl_Slider *)o)->value());
+}
 //------------------------------------------------
 // Return the ImpressionistDoc used
 //------------------------------------------------
@@ -328,6 +387,14 @@ int ImpressionistUI::getSize()
 	return m_nSize;
 }
 
+int ImpressionistUI::getWidth()
+{
+	return m_nWidth;
+}
+
+int ImpressionistUI::getAngle(){
+	return m_nAngle;
+}
 //-------------------------------------------------
 // Set the brush size
 //-------------------------------------------------
@@ -337,6 +404,16 @@ void ImpressionistUI::setSize( int size )
 
 	if (size<=40) 
 		m_BrushSizeSlider->value(m_nSize);
+}
+
+void ImpressionistUI::setWidth(int width){
+	m_nWidth = width;
+	if (width <= 40)m_BrushWidthSlider->value(m_nWidth);
+}
+
+void ImpressionistUI::setAngle(int angle){
+	m_nAngle = angle;
+	if (angle <= 360)m_BrushAngleSlider->value(m_nAngle);
 }
 
 // Main menu definition
@@ -366,6 +443,14 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE+1] = {
   {"Scattered Lines",	FL_ALT+'m', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_LINES},
   {"Scattered Circles",	FL_ALT+'d', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_CIRCLES},
   {0}
+};
+
+// Direction control choice menu definition
+Fl_Menu_Item ImpressionistUI::directionControlTypeMenu[NUM_DIR_CONTROL_TYPE+ 1] = {
+		{ "Slider/Right Mouse", FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_directionControlTypeChoice, (void *)DIR_CONTROL_SLIDER },
+		{ "Gradient", FL_ALT + 'g', (Fl_Callback *)ImpressionistUI::cb_directionControlTypeChoice, (void *)DIR_CONTROL_GRADIENT },
+		{ "Brush Direction", FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_directionControlTypeChoice, (void *)DIR_CONTROL_BRUSH_DIRECTION },
+		{ 0 }
 };
 
 
@@ -411,6 +496,12 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushTypeChoice->menu(brushTypeMenu);
 		m_BrushTypeChoice->callback(cb_brushChoice);
 
+		m_DirectionControlTypeChoice = new Fl_Choice(115, 45, 150, 25, "&Stroke Direction");
+		m_DirectionControlTypeChoice->user_data((void*)(this));	// record self to be used by static callback functions
+		m_DirectionControlTypeChoice->menu(directionControlTypeMenu);
+		m_DirectionControlTypeChoice->callback(cb_directionControlTypeChoice);
+		m_DirectionControlTypeChoice->deactivate();
+
 		m_ClearCanvasButton = new Fl_Button(240,10,150,25,"&Clear Canvas");
 		m_ClearCanvasButton->user_data((void*)(this));
 		m_ClearCanvasButton->callback(cb_clear_canvas_button);
@@ -428,6 +519,34 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushSizeSlider->value(m_nSize);
 		m_BrushSizeSlider->align(FL_ALIGN_RIGHT);
 		m_BrushSizeSlider->callback(cb_sizeSlides);
+
+		//----To install a width slider--------------------------
+		m_BrushWidthSlider = new Fl_Value_Slider(10, 110, 300, 20, "Line Width");
+		m_BrushWidthSlider->user_data((void*)(this));	// record self to be used by static callback functions
+		m_BrushWidthSlider->type(FL_HOR_NICE_SLIDER);
+		m_BrushWidthSlider->labelfont(FL_COURIER);
+		m_BrushWidthSlider->labelsize(12);
+		m_BrushWidthSlider->minimum(1);
+		m_BrushWidthSlider->maximum(40);
+		m_BrushWidthSlider->step(1);
+		m_BrushWidthSlider->value(m_nWidth);
+		m_BrushWidthSlider->align(FL_ALIGN_RIGHT);
+		m_BrushWidthSlider->callback(cb_widthSlides);
+		m_BrushWidthSlider->deactivate();
+		
+		//----To install a angle slider--------------------------
+		m_BrushAngleSlider = new Fl_Value_Slider(10, 140, 300, 20, "Line Angle");
+		m_BrushAngleSlider->user_data((void*)(this));	// record self to be used by static callback functions
+		m_BrushAngleSlider->type(FL_HOR_NICE_SLIDER);
+		m_BrushAngleSlider->labelfont(FL_COURIER);
+		m_BrushAngleSlider->labelsize(12);
+		m_BrushAngleSlider->minimum(0);
+		m_BrushAngleSlider->maximum(360);
+		m_BrushAngleSlider->step(1);
+		m_BrushAngleSlider->value(m_nAngle);
+		m_BrushAngleSlider->align(FL_ALIGN_RIGHT);
+		m_BrushAngleSlider->callback(cb_angleSlides);
+		m_BrushAngleSlider->deactivate();
 
     m_brushDialog->end();	
 
