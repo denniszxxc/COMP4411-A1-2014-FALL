@@ -144,29 +144,32 @@ void PaintView::draw()
 
 int PaintView::handle(int event)
 {
-	switch(event)
+	switch (event)
 	{
 	case FL_ENTER:
-	    redraw();
+		redraw();
 		break;
 	case FL_PUSH:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
-		if (Fl::event_button()>1)
-			eventToDo=RIGHT_MOUSE_DOWN;
+		if (Fl::event_button() > 1)
+			eventToDo = RIGHT_MOUSE_DOWN;
 		else
-			eventToDo=LEFT_MOUSE_DOWN;
-		isAnEvent=1;
+			eventToDo = LEFT_MOUSE_DOWN;
+		isAnEvent = 1;
 		redraw();
 		break;
 	case FL_DRAG:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
-		if (Fl::event_button()>1)
-			eventToDo=RIGHT_MOUSE_DRAG;
+		if (Fl::event_button() > 1)
+			eventToDo = RIGHT_MOUSE_DRAG;
 		else
-			eventToDo=LEFT_MOUSE_DRAG;
-		isAnEvent=1;
+			eventToDo = LEFT_MOUSE_DRAG;
+		if (coord.x > m_nStartCol && coord.x < m_nEndCol
+			&& coord.y>m_nStartRow && coord.y < m_nEndRow){
+		isAnEvent = 1;
+		}
 		redraw();
 		break;
 	case FL_RELEASE:
@@ -182,6 +185,8 @@ int PaintView::handle(int event)
 	case FL_MOVE:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
+
+		
 		break;
 	default:
 		return 0;
@@ -196,6 +201,7 @@ int PaintView::handle(int event)
 
 void PaintView::refresh()
 {
+	
 	redraw();
 }
 
