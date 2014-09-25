@@ -108,7 +108,10 @@ void PaintView::draw()
 			m_pDoc->m_pCurrentBrush->BrushBegin( source, target );
 			break;
 		case LEFT_MOUSE_DRAG:
-			m_pDoc->m_pCurrentBrush->BrushMove( source, target );
+			if (coord.x > m_nStartCol && coord.x < m_nEndCol
+				&& coord.y>m_nStartRow && coord.y < m_nEndRow){
+				m_pDoc->m_pCurrentBrush->BrushMove(source, target);
+			}
 			break;
 		case LEFT_MOUSE_UP:
 			m_pDoc->m_pCurrentBrush->BrushEnd( source, target );
@@ -166,10 +169,8 @@ int PaintView::handle(int event)
 			eventToDo = RIGHT_MOUSE_DRAG;
 		else
 			eventToDo = LEFT_MOUSE_DRAG;
-		if (coord.x > m_nStartCol && coord.x < m_nEndCol
-			&& coord.y>m_nStartRow && coord.y < m_nEndRow){
 		isAnEvent = 1;
-		}
+	
 		redraw();
 		break;
 	case FL_RELEASE:
