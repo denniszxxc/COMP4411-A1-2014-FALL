@@ -16,18 +16,16 @@
 using namespace std;
 
 #define pi 3.14159265
+
 extern float frand();
 
 ScatteredLineBrush::ScatteredLineBrush(ImpressionistDoc* pDoc, char* name) :
 ImpBrush(pDoc, name)
 {
-	
 }
 
 void ScatteredLineBrush::BrushBegin(const Point source, const Point target)
 {
-	
-
 	ImpressionistDoc* pDoc = GetDocument();
 	ImpressionistUI* dlg = pDoc->m_pUI;
 
@@ -49,7 +47,6 @@ void ScatteredLineBrush::BrushMove(const Point source, const Point target)
 		printf("PointBrush::BrushMove  document is NULL\n");
 		return;
 	}
-	
 
 	/* initialize random seed: */
 	srand(time(NULL));

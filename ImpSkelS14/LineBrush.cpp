@@ -13,7 +13,6 @@ extern float frand();
 LineBrush::LineBrush(ImpressionistDoc* pDoc, char* name) :
 ImpBrush(pDoc, name)
 {
-
 }
 
 void LineBrush::BrushBegin(const Point source, const Point target)
@@ -27,6 +26,7 @@ void LineBrush::BrushBegin(const Point source, const Point target)
 
 	glPointSize((float)size);
 	start = target;
+
 	BrushMove(source, target);
 }
 

@@ -113,11 +113,17 @@ void PaintView::draw()
 		case LEFT_MOUSE_DOWN:
 			SaveCurrentContent();
 			RestoreContent();
-			m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+			if (coord.x > m_nStartCol && coord.x < m_nEndCol
+				&& coord.y>m_nStartRow && coord.y < m_nEndRow){
+				m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+			}
 			break;
 		case LEFT_MOUSE_DRAG:
 			SaveCurrentContent();
-			m_pDoc->m_pCurrentBrush->BrushMove(source, target);
+			if (coord.x > m_nStartCol && coord.x < m_nEndCol
+				&& coord.y>m_nStartRow && coord.y < m_nEndRow){
+				m_pDoc->m_pCurrentBrush->BrushMove(source, target);
+			}
 			break;
 		case LEFT_MOUSE_UP:
 			m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
@@ -279,12 +285,40 @@ void PaintView::RestoreContent()
 
 void PaintView::paintAll(int space) {
 	isAnEvent = true;
-	for (int i = 0; i < m_nDrawWidth; i += space){
-		for (int j = 0; j < m_nDrawHeight; j += space){
-			Point source(i + m_nStartCol, m_nEndRow - j);
-			Point target(i, m_nWindowHeight - j);
-			m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+
+	// generate a list of distint points to paint
+	int x_size = m_nDrawWidth / space;
+	int y_size = m_nDrawHeight / space; 
+	std::vector<Point> random_arr_point ;
+	random_arr_point.resize(x_size*y_size);
+
+	for (int i = 0; i < x_size; i ++){
+		for (int j = 0; j < y_size; j++){
+			Point temp;
+			temp.x = i * space;
+			temp.y = j * space;
+			random_arr_point[i * y_size + j] = temp;
 		}
+	}
+
+	//swap the list of points randomly
+	srand(time(NULL));
+	for (int i = 0; i < x_size*y_size; ++i) {
+		int j = rand() %((x_size*y_size)-i); // Pick random number from 0 <= r < n-i.  Pick favorite method
+		// j == 0 means don't swap, otherwise swap with the element j away
+		if (j != 0) {
+			Point tempPoint = random_arr_point[i];
+			random_arr_point[i] = random_arr_point[i + j];
+			random_arr_point[i + j] = tempPoint;
+		}
+	}
+
+	for (int k = 0; k < x_size*y_size; k++){
+		int i = random_arr_point[k].x;
+		int j = random_arr_point[k].y;
+		Point source(i + m_nStartCol, m_nEndRow - j);
+		Point target(i, m_nWindowHeight - j);
+		m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
 	}
 	refresh();
 	isAnEvent = true;
