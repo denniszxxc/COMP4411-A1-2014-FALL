@@ -25,10 +25,15 @@ public:
 
 	int     clearCanvas();                  // called by the UI to clear the drawing canvas
 	void	setBrushType(int type);			// called by the UI to set the brushType
+	void	setDirectionControlType(int type);
+	int		getDirectionControlType();
 	int		getSize();						// get the UI size
+	int		getWidth();
+	int		getAngle();
+	void	setWidth();
 	void	setSize(int size);				// set the UI size
 	char*	getImageName();					// get the current image name
-	
+	void	red_dot(int x, int y);			// call by paintView to create red dot on OriginalView
 
 // Attributes
 public:
@@ -44,7 +49,8 @@ public:
 
 
 	// The current active brush.
-	ImpBrush*			m_pCurrentBrush;	
+	ImpBrush*			m_pCurrentBrush;
+	int					m_pCurrentDirectionControl=0;
 	// Size of the brush.
 	int m_nSize;							
 

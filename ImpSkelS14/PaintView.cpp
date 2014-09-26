@@ -9,6 +9,9 @@
 #include "impressionistUI.h"
 #include "paintview.h"
 #include "ImpBrush.h"
+#include <cmath>
+#include <iostream>
+using namespace std;
 
 
 #define LEFT_MOUSE_DOWN		1
@@ -27,6 +30,9 @@
 static int		eventToDo;
 static int		isAnEvent=0;
 static Point	coord;
+static Point startingPT;
+static Point finishingPT;
+static double userAngle = 0;
 
 PaintView::PaintView(int			x, 
 					 int			y, 
@@ -102,32 +108,59 @@ void PaintView::draw()
 		Point target( coord.x, m_nWindowHeight - coord.y );
 		
 		// This is the event handler
-		switch (eventToDo) 
+		switch (eventToDo)
 		{
 		case LEFT_MOUSE_DOWN:
-			m_pDoc->m_pCurrentBrush->BrushBegin( source, target );
+			SaveCurrentContent();
+			RestoreContent();
+			m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
 			break;
 		case LEFT_MOUSE_DRAG:
-			m_pDoc->m_pCurrentBrush->BrushMove( source, target );
+			SaveCurrentContent();
+			m_pDoc->m_pCurrentBrush->BrushMove(source, target);
 			break;
 		case LEFT_MOUSE_UP:
-			m_pDoc->m_pCurrentBrush->BrushEnd( source, target );
+			m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
 
 			SaveCurrentContent();
 			RestoreContent();
 			break;
 		case RIGHT_MOUSE_DOWN:
+		{
+			SaveCurrentContent();
+			RestoreContent();
+			startingPT = target;
+			glBegin(GL_POINTS);
+			glColor3f(1, 0, 0);
 
+			glVertex2d(startingPT.x, startingPT.y);
+
+			glEnd();
 			break;
-		case RIGHT_MOUSE_DRAG:
+		}
 
+		case RIGHT_MOUSE_DRAG:
+			RestoreContent();
+			glBegin(GL_LINES);
+			glColor3f(1, 0, 0);
+
+			glVertex2d(startingPT.x, startingPT.y);
+			glVertex2d(target.x, target.y);
+			glEnd();
 			break;
 		case RIGHT_MOUSE_UP:
+
+			RestoreContent();
+			finishingPT = target;
+			userAngle = atan2(((double)finishingPT.y - startingPT.y), ((double)finishingPT.x - startingPT.x));
+			if (userAngle < 0)userAngle += 2 * 3.14159265;
+			userAngle = userAngle *57.2957795;
+			m_pDoc->m_pUI->setAngle(userAngle);
 
 			break;
 
 		default:
-			printf("Unknown event!!\n");		
+			printf("Unknown event!!\n");
 			break;
 		}
 	}
@@ -144,29 +177,31 @@ void PaintView::draw()
 
 int PaintView::handle(int event)
 {
-	switch(event)
+	switch (event)
 	{
 	case FL_ENTER:
-	    redraw();
+		redraw();
 		break;
 	case FL_PUSH:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
-		if (Fl::event_button()>1)
-			eventToDo=RIGHT_MOUSE_DOWN;
+		if (Fl::event_button() > 1)
+			eventToDo = RIGHT_MOUSE_DOWN;
 		else
-			eventToDo=LEFT_MOUSE_DOWN;
-		isAnEvent=1;
+			eventToDo = LEFT_MOUSE_DOWN;
+		isAnEvent = 1;
 		redraw();
 		break;
 	case FL_DRAG:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
-		if (Fl::event_button()>1)
-			eventToDo=RIGHT_MOUSE_DRAG;
+		if (Fl::event_button() > 1)
+			eventToDo = RIGHT_MOUSE_DRAG;
 		else
-			eventToDo=LEFT_MOUSE_DRAG;
-		isAnEvent=1;
+			eventToDo = LEFT_MOUSE_DRAG;
+		isAnEvent = 1;
+	
+		m_pDoc->red_dot(coord.x, coord.y);
 		redraw();
 		break;
 	case FL_RELEASE:
@@ -182,6 +217,7 @@ int PaintView::handle(int event)
 	case FL_MOVE:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
+		m_pDoc->red_dot(coord.x , coord.y);
 		break;
 	default:
 		return 0;
@@ -239,4 +275,17 @@ void PaintView::RestoreContent()
 				  m_pPaintBitstart);
 
 //	glDrawBuffer(GL_FRONT);
+}
+
+void PaintView::paintAll(int space) {
+	isAnEvent = true;
+	for (int i = 0; i < m_nDrawWidth; i += space){
+		for (int j = 0; j < m_nDrawHeight; j += space){
+			Point source(i + m_nStartCol, m_nEndRow - j);
+			Point target(i, m_nWindowHeight - j);
+			m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+		}
+	}
+	refresh();
+	isAnEvent = true;
 }
