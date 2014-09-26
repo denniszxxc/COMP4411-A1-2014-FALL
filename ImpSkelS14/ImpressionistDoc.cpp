@@ -14,7 +14,11 @@
 
 // Include individual brush headers here.
 #include "PointBrush.h"
-
+#include "LineBrush.h"
+#include "CircleBrush.h"
+#include "ScatteredPointBrush.h"
+#include "ScatteredCircleBrush.h"
+#include "ScatteredLineBrush.h"
 
 #define DESTROY(p)	{  if ((p)!=NULL) {delete [] p; p=NULL; } }
 
@@ -36,15 +40,15 @@ ImpressionistDoc::ImpressionistDoc()
 
 	// Note: You should implement these 5 brushes.  They are set the same (PointBrush) for now
 	ImpBrush::c_pBrushes[BRUSH_LINES]				
-		= new PointBrush( this, "Lines" );
+		= new LineBrush( this, "Lines" );
 	ImpBrush::c_pBrushes[BRUSH_CIRCLES]				
-		= new PointBrush( this, "Circles" );
+		= new CircleBrush( this, "Circles" );
 	ImpBrush::c_pBrushes[BRUSH_SCATTERED_POINTS]	
-		= new PointBrush( this, "Scattered Points" );
+		= new ScatteredPointBrush(this, "Scattered Points");
 	ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES]		
-		= new PointBrush( this, "Scattered Lines" );
+		= new ScatteredLineBrush(this, "Scattered Lines");
 	ImpBrush::c_pBrushes[BRUSH_SCATTERED_CIRCLES]	
-		= new PointBrush( this, "Scattered Circles" );
+		= new ScatteredCircleBrush(this, "Scattered Circles");
 
 	// make one of the brushes current
 	m_pCurrentBrush	= ImpBrush::c_pBrushes[0];
@@ -76,6 +80,13 @@ void ImpressionistDoc::setBrushType(int type)
 {
 	m_pCurrentBrush	= ImpBrush::c_pBrushes[type];
 }
+void ImpressionistDoc::setDirectionControlType(int type)
+{
+	m_pCurrentDirectionControl = type;
+}
+int ImpressionistDoc::getDirectionControlType(){
+	return 	m_pCurrentDirectionControl;
+}
 
 //---------------------------------------------------------
 // Returns the size of the brush.
@@ -83,6 +94,15 @@ void ImpressionistDoc::setBrushType(int type)
 int ImpressionistDoc::getSize()
 {
 	return m_pUI->getSize();
+}
+int ImpressionistDoc::getWidth(){
+	return m_pUI->getWidth();
+}
+int ImpressionistDoc::getAngle(){
+	return m_pUI->getAngle();
+}
+double ImpressionistDoc::getAlpha(){
+	return m_pUI->getAlpha();
 }
 
 //---------------------------------------------------------
@@ -200,3 +220,8 @@ GLubyte* ImpressionistDoc::GetOriginalPixel( const Point p )
 	return GetOriginalPixel( p.x, p.y );
 }
 
+void ImpressionistDoc::red_dot(int x, int y){
+	if (x > 0) {
+		m_pUI->m_origView->refresh(x,y);
+	}
+}

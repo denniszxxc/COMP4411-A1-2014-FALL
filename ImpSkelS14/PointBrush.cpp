@@ -50,6 +50,7 @@ void PointBrush::BrushMove( const Point source, const Point target )
 
 void PointBrush::BrushEnd( const Point source, const Point target )
 {
+	glPointSize((float)1);
 	// do nothing so far
 }
 
