@@ -631,14 +631,15 @@ ImpressionistUI::ImpressionistUI() {
 		m_PaintAllSpaceSlider->align(FL_ALIGN_RIGHT);
 		m_PaintAllSpaceSlider->callback(cb_SpaceSlides);
 
-		m_PaintAll = new Fl_Button(250, 200, 100, 25, "&Paint All");
+		//---To install a light button---------------------
+		m_randomPaintSize= new Fl_Light_Button(200, 200, 100, 25, "&Size Rand.");
+		m_randomPaintSize->user_data((void*)(this));   // record self to be used by static callback functions
+		m_randomPaintSize->callback(cb_randomPaintSize);
+
+		m_PaintAll = new Fl_Button(310, 200, 70, 25, "&Paint All");
 		m_PaintAll->user_data((void*)(this));
 		m_PaintAll->callback(cb_paint_all_button);
 
-		//---To install a light button---------------------
-		m_randomPaintSize= new Fl_Light_Button(250, 180, 100, 25, "&Size Rand.");
-		m_randomPaintSize->user_data((void*)(this));   // record self to be used by static callback functions
-		m_randomPaintSize->callback(cb_randomPaintSize);
-    m_brushDialog->end();	
+		m_brushDialog->end();	
 
 }
