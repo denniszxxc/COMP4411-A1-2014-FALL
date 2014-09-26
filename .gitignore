@@ -193,3 +193,5 @@ ImpSkelS14/impressionist.sln
 ImpSkelS14/impressionist.vcxproj
 ImpSkelS14/impressionist.vcxproj.filters
 imp_sample_13sp-2.zip
+*.DS_Store
+*.zip
