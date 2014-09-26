@@ -39,6 +39,7 @@ void CircleBrush::BrushMove(const Point source, const Point target)
 
 	int size = pDoc->getSize();
 	
+
 	/*
 	glBegin(GL_LINE_LOOP);
 	SetColor(source);
@@ -49,6 +50,7 @@ void CircleBrush::BrushMove(const Point source, const Point target)
 	}
 
 	glBegin(GL_LINES);
+
 	SetColor(source);
 
 	for (int j = 0; j < 720; j++){

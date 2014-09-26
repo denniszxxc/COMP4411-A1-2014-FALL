@@ -351,6 +351,14 @@ void ImpressionistUI::cb_SpaceSlides(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_nSpace = int(((Fl_Slider *)o)->value());
 }
 
+//---The light button callback---------------------
+void ImpressionistUI::cb_randomPaintSize(Fl_Widget* o, void* v)
+{
+	ImpressionistUI *pUI = ((ImpressionistUI*)(o->user_data()));
+
+	if (pUI->randomPaintSize == TRUE) pUI->randomPaintSize = FALSE;
+	else pUI->randomPaintSize = TRUE;
+}
 
 
 //---------------------------------- per instance functions --------------------------------------
@@ -433,9 +441,11 @@ int ImpressionistUI::getWidth()
 int ImpressionistUI::getAngle(){
 	return m_nAngle;
 }
+
 double ImpressionistUI::getAlpha(){
 	return m_nAlpha;
 }
+
 //-------------------------------------------------
 // Set the brush size
 //-------------------------------------------------
@@ -533,6 +543,7 @@ ImpressionistUI::ImpressionistUI() {
 
 	m_nSize = 10;
 	m_nSpace = 10;
+	randomPaintSize = false;
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
@@ -624,6 +635,10 @@ ImpressionistUI::ImpressionistUI() {
 		m_PaintAll->user_data((void*)(this));
 		m_PaintAll->callback(cb_paint_all_button);
 
+		//---To install a light button---------------------
+		m_randomPaintSize= new Fl_Light_Button(250, 180, 100, 25, "&Size Rand.");
+		m_randomPaintSize->user_data((void*)(this));   // record self to be used by static callback functions
+		m_randomPaintSize->callback(cb_randomPaintSize);
     m_brushDialog->end();	
 
 }

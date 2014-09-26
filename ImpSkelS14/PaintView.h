@@ -12,6 +12,8 @@
 #include <FL/gl.h>
 #include <GL/glu.h>
 #include <stdlib.h>
+#include <vector>
+#include <time.h>
 
 class ImpressionistDoc;
 
@@ -29,6 +31,8 @@ public:
 	void SaveCurrentContent();
 
 	void RestoreContent();
+
+	void paintAll(int space);
 
 	ImpressionistDoc *m_pDoc;
 

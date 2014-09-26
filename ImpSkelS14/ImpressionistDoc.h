@@ -27,10 +27,12 @@ public:
 	void	setBrushType(int type);			// called by the UI to set the brushType
 	void	setDirectionControlType(int type);
 	int		getDirectionControlType();
+
 	int		getSize();						// get the UI size
 	int		getWidth();
 	int		getAngle();
 	double getAlpha();
+
 	void	setWidth();
 	void	setSize(int size);				// set the UI size
 	char*	getImageName();					// get the current image name
@@ -52,6 +54,7 @@ public:
 	// The current active brush.
 	ImpBrush*			m_pCurrentBrush;
 	int					m_pCurrentDirectionControl=0;
+
 	// Size of the brush.
 	int m_nSize;							
 

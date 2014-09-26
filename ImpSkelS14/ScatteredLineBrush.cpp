@@ -16,6 +16,7 @@
 using namespace std;
 
 #define pi 3.14159265
+
 extern float frand();
 
 ScatteredLineBrush::ScatteredLineBrush(ImpressionistDoc* pDoc, char* name) :
@@ -26,8 +27,6 @@ ImpBrush(pDoc, name)
 
 void ScatteredLineBrush::BrushBegin(const Point source, const Point target)
 {
-	
-
 	ImpressionistDoc* pDoc = GetDocument();
 	ImpressionistUI* dlg = pDoc->m_pUI;
 
@@ -50,7 +49,6 @@ void ScatteredLineBrush::BrushMove(const Point source, const Point target)
 		printf("PointBrush::BrushMove  document is NULL\n");
 		return;
 	}
-	
 
 	/* initialize random seed: */
 	srand(time(NULL));
@@ -109,12 +107,10 @@ void ScatteredLineBrush::BrushMove(const Point source, const Point target)
 		if (pDoc->getDirectionControlType() == DIR_CONTROL_BRUSH_DIRECTION && checker!=1){
 			Point current = target;
 			angle = atan2(((double)current.y - start.y), ((double)current.x - start.x));
-			
 			if (angle < 0)angle += 2 * 3.14159265;
 			start = current;
 			checker = 1;
 		}
-		
 		double  newLX = tempT.x + (size / 2)*cos(angle);
 		double newLY = tempT.y + (size / 2)*sin(angle);
 		double newRX = tempT.x - (size / 2)*cos(angle);

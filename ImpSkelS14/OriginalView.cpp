@@ -75,6 +75,13 @@ void OriginalView::draw()
 		glDrawBuffer( GL_BACK );
 		glDrawPixels( drawWidth, drawHeight, GL_RGB, GL_UNSIGNED_BYTE, bitstart );
 
+
+		// draw a redbox showing curser location 
+		glPointSize(5.0);
+		glColor3f(1,0,0);
+		glBegin(GL_POINTS);
+			glVertex2d(red_dotX,red_dotY);
+		glEnd();
 	}
 			
 	glFlush();
@@ -85,6 +92,11 @@ void OriginalView::refresh()
 	redraw();
 }
 
+void OriginalView::refresh(int x, int y) {
+	red_dotX = x;
+	red_dotY = m_nWindowHeight - y;
+	redraw();
+}
 void OriginalView::resizeWindow(int	width, 
 								int	height)
 {

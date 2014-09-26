@@ -93,6 +93,9 @@ int ImpressionistDoc::getDirectionControlType(){
 //---------------------------------------------------------
 int ImpressionistDoc::getSize()
 {
+	if (m_pUI->randomPaintSize){
+		return (int) floor( m_pUI->getSize() * ( (rand() % 15)/10.0 +0.5));
+	}
 	return m_pUI->getSize();
 }
 int ImpressionistDoc::getWidth(){

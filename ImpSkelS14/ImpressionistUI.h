@@ -45,6 +45,7 @@ public:
 	Fl_Button*          m_ClearCanvasButton;
 
 	Fl_Slider*			m_PaintAllSpaceSlider;
+	Fl_Light_Button*    m_randomPaintSize;
 	Fl_Button*			m_PaintAll;
 
 	// Member functions
@@ -63,6 +64,8 @@ public:
 	int					getAngle();
 	void				setAngle(int angle);
 	double				getAlpha();
+	bool				randomPaintSize;
+
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 
@@ -97,6 +100,7 @@ private:
 	static void cb_alphaSlides(Fl_Widget* o, void* v);
 	static void	swap_windows(Fl_Menu_* o, void* v);
 	static void cb_paint_all_button(Fl_Widget* o, void* v);
+	static void cb_randomPaintSize(Fl_Widget* o, void* v);
 
 };
 

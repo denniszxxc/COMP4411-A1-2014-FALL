@@ -27,6 +27,7 @@ public:
 	
 	void draw();
 	void refresh();
+	void refresh(int x, int y);
 
 	void resizeWindow(int width, int height);
 
@@ -34,7 +35,9 @@ public:
 
 private:
 	int	m_nWindowWidth, 
-		m_nWindowHeight;
+		m_nWindowHeight,
+		red_dotX,
+		red_dotY;
 
 };
 

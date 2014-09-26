@@ -20,7 +20,12 @@ enum
 	BRUSH_SCATTERED_CIRCLES,
 	NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
-
+enum{
+	DIR_CONTROL_SLIDER = 0,
+	DIR_CONTROL_GRADIENT,
+	DIR_CONTROL_BRUSH_DIRECTION,
+	NUM_DIR_CONTROL_TYPE
+};
 
 class ImpressionistDoc; // Pre-declaring class
 
